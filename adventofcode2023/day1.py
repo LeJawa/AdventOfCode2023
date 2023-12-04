@@ -1,32 +1,32 @@
 input_file = "adventofcode2023/inputs/day1.txt"
 
 ## Solution 1
-# with open(input_file, "r") as f:
-#     lines = f.readlines()
+with open(input_file, "r") as f:
+    lines = f.readlines()
     
-#     sum = 0
-#     for line in lines:
-#         digit1 = ""
-#         digit2 = ""
+    sum = 0
+    for line in lines:
+        digit1 = ""
+        digit2 = ""
         
-#         for char in line:
-#             if char.isdigit():
-#                 digit1 = char
-#                 break
-#         for char in line[::-1]:
-#             if char.isdigit():
-#                 digit2 = char
-#                 break
+        for char in line:
+            if char.isdigit():
+                digit1 = char
+                break
+        for char in line[::-1]:
+            if char.isdigit():
+                digit2 = char
+                break
             
-#         number = int(digit1 + digit2)
-#         sum += number
+        number = int(digit1 + digit2)
+        sum += number
 
-#     print(sum)
+    print(sum)
 
 ## Solution 2
 import re
 
-pattern = r"(\d|one|two|three|four|five|six|seven|eight|nine)"
+pattern = r"(?=(\d|one|two|three|four|five|six|seven|eight|nine))"
 
 def parse(digit):
     if digit == "one":
@@ -50,29 +50,19 @@ def parse(digit):
     else:
         return digit
 
+
 with open(input_file, "r") as f:
     lines = f.readlines()
     
     sum = 0
     for line in lines:
-        original_line = line
-        digits_found = [(m.start(0), m.end(0)) for m in re.finditer(pattern, line)]
-        print(digits_found)
+        digits_found = [(m.start(0), m.end(1)) for m in re.finditer(pattern, line)]
         
         if len(digits_found) == 0:
             continue
         
         digit1 = line[digits_found[0][0]:digits_found[0][1]]
-        if (digits_found[0][0] == 0):
-            line = line[digits_found[0][0]:]
-        else:
-            line = line[:digits_found[0][0]] + line[digits_found[0][0]+1:]
-        
-        digits_found = [(m.start(0), m.end(0)) for m in re.finditer(pattern, line)]
-        if len(digits_found) == 0:
-            digit2 = digit1
-        else:
-            digit2 = line[digits_found[-1][0]:digits_found[-1][1]]
+        digit2 = line[digits_found[-1][0]:digits_found[-1][1]]
         
         if len(digit1) > 1:
             digit1 = parse(digit1)
@@ -81,8 +71,8 @@ with open(input_file, "r") as f:
             digit2 = parse(digit2)
         
         number = int(digit1 + digit2)
-        print(f"{number} - {original_line.strip()}")
         sum += number
-        
 
     print(sum)
+
+
