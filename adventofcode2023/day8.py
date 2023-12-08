@@ -72,12 +72,28 @@ def all_nodes_are_end(nodes):
 
 steps = 0
 
-while not all_nodes_are_end(start_nodes):
-    instruction = next_instruction()
-    for i in range(len(start_nodes)):
-        start_nodes[i] = next_node(start_nodes[i], instruction)        
-    steps += 1
+number_of_nodes = len(start_nodes)
 
-print(steps)
+last_steps = 0
+intervals = [0 for _ in range(number_of_nodes)]
+
+for i in range(number_of_nodes):
+    index = 0
+    for _ in range(50000):
+        start_nodes[i] = next_node(start_nodes[i])        
+        steps += 1
+        
+        if node_is_end(start_nodes[i]):
+            interval = steps - last_steps
+            last_steps = steps
+            intervals[i] = interval  
+
+
+from math import gcd
+
+lcm = 1
+for i in intervals:
+    lcm = lcm*i//gcd(lcm, i)
+print(lcm)
 
     
